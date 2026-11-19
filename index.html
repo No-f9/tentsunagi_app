@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FFF6E6">
+<title>点つなぎ（デモ版）</title>
+<style>
+:root{
+  --bg:#FFF6E6;--card:#FFFFFF;--ink:#2B2D42;--soft:#7A7F95;--dot:#55648A;
+  --accent:#FF8A3D;--accent-d:#E2691A;--good:#2FA36B;--good-d:#1F7A4E;
+  --bad:#E5484D;--miss:#2F7BEA;--erase:#D45C9E;--line:#EADFC9;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  overscroll-behavior:none;touch-action:none}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;gap:8px;
+  padding:calc(env(safe-area-inset-top) + 8px) calc(env(safe-area-inset-right) + 12px)
+          calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 12px)}
+
+/* ヘッダー */
+header{display:flex;align-items:center;gap:10px}
+h1{font-size:22px;margin:0 4px 0 2px;letter-spacing:.06em;white-space:nowrap}
+h1 small{font-size:11px;color:var(--soft);font-weight:700;margin-left:6px;letter-spacing:0}
+.levels{display:flex;gap:8px;flex:1;overflow:hidden}
+.lv{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;
+  font-weight:800;font-size:16px;display:flex;align-items:baseline;gap:6px;min-height:44px;white-space:nowrap}
+.lv span{font-size:11px;color:var(--soft);font-weight:700}
+.lv.on{border-color:var(--accent);background:#FFF0E3}
+.icon-btn{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--card);font-size:20px;padding:0}
+
+/* スタンプ帳（進み具合） */
+#prog{display:flex;gap:4px;justify-content:center}
+.slot{flex:0 1 30px;max-width:30px;aspect-ratio:1;border-radius:50%;background:#F2E7D3;
+  display:grid;place-items:center;font-size:clamp(9px,2.3vw,19px);line-height:1}
+.slot.got{background:#FFE2C7}
+.slot.pop{animation:pop .7s}
+
+/* 見本と解答 */
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+#stage.land{flex-direction:row;gap:24px}
+.board{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.tag{font-size:13px;font-weight:800;color:var(--soft);background:#F4EAD8;border-radius:999px;padding:3px 12px;height:22px;line-height:16px}
+.tag.erase{background:var(--erase);color:#fff}
+.card{background:var(--card);border-radius:22px;border:3px solid var(--line);box-shadow:0 4px 0 #EFE3CB}
+#ans{border-color:#F6C9A3}
+#ans.erasing{border-color:var(--erase);border-style:dashed}
+svg{display:block;width:100%;height:100%;touch-action:none}
+
+/* 下のボタン */
+#toolbar{display:grid;grid-template-columns:1fr 1fr 1fr 1.6fr;gap:10px}
+.tb{border-radius:20px;font-weight:800;font-size:15px;min-height:76px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 #E8DBC2}
+.tb .ic{font-size:28px;line-height:1;height:30px;display:grid;place-items:center}
+.tb:active{transform:translateY(3px);box-shadow:0 1px 0 #E8DBC2}
+.tb.on{background:var(--erase);color:#fff;border-color:var(--erase);box-shadow:0 4px 0 #A9407A}
+#done{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 0 var(--accent-d);font-size:22px}
+#done:active{box-shadow:0 1px 0 var(--accent-d)}
+
+/* ひとこと */
+#toast{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.9);background:#fff;border-radius:20px;
+  padding:14px 22px;font-size:20px;font-weight:800;box-shadow:0 8px 24px rgba(60,40,0,.18);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;white-space:nowrap;z-index:20}
+#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* まちがい */
+#sheet{position:fixed;left:calc(env(safe-area-inset-left) + 12px);right:calc(env(safe-area-inset-right) + 12px);
+  bottom:calc(env(safe-area-inset-bottom) + 10px);min-height:80px;background:#fff;border-radius:22px;padding:12px 14px;
+  box-shadow:0 -4px 24px rgba(60,40,0,.14);display:none;align-items:center;gap:12px;z-index:5;border:3px solid #F8D3D4}
+#sheet.show{display:flex}
+.sheet-text{flex:1;min-width:0}
+.sheet-text strong{font-size:24px;color:var(--bad);display:block;line-height:1.2}
+.legend{display:flex;gap:16px;font-size:14px;font-weight:800;color:var(--soft);margin-top:4px;flex-wrap:wrap}
+.legend i{display:inline-block;width:30px;height:0;border-top:5px dashed var(--bad);vertical-align:middle;margin-right:5px}
+.legend i.m{border-top:5px dotted var(--miss)}
+.sbtn{border:0;border-radius:16px;font-weight:900;font-size:18px;padding:12px 18px;min-height:56px;white-space:nowrap}
+.sbtn.fix{background:var(--accent);color:#fff;box-shadow:0 4px 0 var(--accent-d)}
+.sbtn.skip{background:#F2E7D3}
+
+/* せいかい */
+.overlay{position:fixed;inset:0;background:rgba(255,246,230,.9);display:none;align-items:center;justify-content:center;z-index:10}
+.overlay.show{display:flex}
+.ok-card{text-align:center}
+.stamp-wrap{width:200px;height:200px;margin:0 auto;border-radius:50%;background:#fff;border:6px solid #FFC9A0;
+  display:grid;place-items:center;box-shadow:0 8px 0 #F3DCC2}
+.stamp{font-size:120px;line-height:1;display:inline-block;animation:stamp .7s cubic-bezier(.2,1.6,.4,1) both}
+.ok-text{font-size:40px;font-weight:900;color:var(--good);margin:18px 0 26px;letter-spacing:.08em}
+.big{border:0;border-radius:999px;background:var(--good);color:#fff;font-weight:900;font-size:26px;padding:16px 56px;
+  box-shadow:0 5px 0 var(--good-d);min-height:66px}
+.big:active{transform:translateY(3px);box-shadow:0 2px 0 var(--good-d)}
+@keyframes stamp{0%{transform:scale(2.6) rotate(-25deg);opacity:0}55%{opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+@keyframes pop{0%{transform:scale(.3)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+@media (max-width:520px){
+  h1{font-size:18px}.lv{padding:5px 10px;font-size:14px}.lv span{display:none}
+  .tb{min-height:64px;font-size:12px}.tb .ic{font-size:24px}#done{font-size:18px}
+  .sheet-text strong{font-size:20px}.sbtn{font-size:15px;padding:10px 12px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>点つなぎ<small>デモ</small></h1>
+    <div class="levels" id="levels"></div>
+    <button class="icon-btn" id="sound" aria-label="おと">🔊</button>
+  </header>
+  <div id="prog"></div>
+  <div id="stage">
+    <div class="board"><div class="tag">みほん</div><div class="card" id="smp"><svg id="svgS" viewBox="0 0 100 100"></svg></div></div>
+    <div class="board"><div class="tag" id="ansTag">ここに かこう</div><div class="card" id="ans"><svg id="svgA" viewBox="0 0 100 100"></svg></div></div>
+  </div>
+  <div id="toolbar">
+    <button class="tb" id="undo"><span class="ic">↩️</span>もどす</button>
+    <button class="tb" id="eraser"><span class="ic"><svg viewBox="0 0 32 32" width="30" height="30"><g transform="rotate(-35 16 16)"><rect x="3" y="10" width="26" height="12" rx="3" fill="#F7A8CF" stroke="#2B2D42" stroke-width="1.5"/><rect x="3" y="10" width="10" height="12" rx="3" fill="#8DB8F2" stroke="#2B2D42" stroke-width="1.5"/></g></svg></span>けしゴム</button>
+    <button class="tb" id="clear"><span class="ic">🗑️</span>ぜんぶけす</button>
+    <button class="tb" id="done"><span class="ic">⭐</span>できた！</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div id="sheet">
+  <div class="sheet-text">
+    <strong>おしい！</strong>
+    <div class="legend" id="legend"></div>
+  </div>
+  <button class="sbtn fix" id="fix">なおす</button>
+  <button class="sbtn skip" id="skip">つぎへ</button>
+</div>
+
+<div class="overlay" id="ok">
+  <div class="ok-card">
+    <div class="stamp-wrap"><span class="stamp" id="okStamp">🐶</span></div>
+    <div class="ok-text" id="okText">できたね！</div>
+    <button class="big" id="next">つぎへ ▶</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- 設定 ----------
+  const LEVELS = [
+    { sub: '3×3',      n: 3, min: 2, max: 3, dirs: 'hv'   },
+    { sub: '3×3 ななめ', n: 3, min: 3, max: 5, dirs: 'diag' },
+    { sub: '5×5',      n: 5, min: 4, max: 7, dirs: 'diag' },
+  ];
+  const ANIMALS = ['🐶','🐱','🐰','🐻','🐼','🦊','🐨','🐯','🐸','🐵','🐷','🐮','🐹','🐧','🐤','🦁','🐭','🐳','🦒','🐘'];
+  const PER_PAGE = 20;
+  const PAD = 14;                       // グリッドの余白（viewBox 0〜100）
+  const STORE = 'tentsunagi-demo-v1';
+
+  const $ = id => document.getElementById(id);
+  const svgS = $('svgS'), svgA = $('svgA');
+
+  // ---------- 状態 ----------
+  let st = { lv: 0, prog: [0, 0, 0], muted: false };
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE));
+    if (s && Array.isArray(s.prog)) st = Object.assign(st, s);
+  } catch (e) {}
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(st)); } catch (e) {} };
+
+  let target = new Set(), user = new Set(), hist = [], recent = [];
+  let mode = 'draw', judged = null, pending = null, stroke = null, erasing = null, preview = null, busy = false;
+
+  const L = () => LEVELS[st.lv];
+  const rand = n => Math.floor(Math.random() * n);
+  const step = () => (100 - 2 * PAD) / (L().n - 1);
+  const pos = i => PAD + i * step();
+  const dotR = () => (L().n === 3 ? 3.6 : 2.9);
+  const lw = () => (L().n === 3 ? 3.4 : 2.8);
+  const same = (a, b) => !!a && !!b && a[0] === b[0] && a[1] === b[1];
+
+  // ---------- 線のデータ ----------
+  // 線は「隣り合う点どうしの短い線」の集まりで持つ。キーは端点を並べ替えた文字列。
+  function key(a, b) {
+    if (a[0] > b[0] || (a[0] === b[0] && a[1] > b[1])) [a, b] = [b, a];
+    return a[0] + ',' + a[1] + '-' + b[0] + ',' + b[1];
+  }
+  const parse = k => k.split('-').map(p => p.split(',').map(Number));
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  // 途中で通る点ごとに区切る（(0,0)→(2,2) は 2本に分かれる）
+  function units(a, b) {
+    const dx = b[0] - a[0], dy = b[1] - a[1], g = gcd(Math.abs(dx), Math.abs(dy));
+    const sx = dx / g, sy = dy / g, out = [];
+    for (let i = 0; i < g; i++) {
+      out.push(key([a[0] + sx * i, a[1] + sy * i], [a[0] + sx * (i + 1), a[1] + sy * (i + 1)]));
+    }
+    return out;
+  }
+  const isDiag = k => { const [a, b] = parse(k); return a[0] !== b[0] && a[1] !== b[1]; };
+
+  // ---------- 問題の自動生成 ----------
+  function dirsFor(t) {
+    const hv = [[1,0],[-1,0],[0,1],[0,-1]];
+    const dg = [[1,1],[-1,-1],[1,-1],[-1,1]];
+    return t === 'hv' ? hv : hv.concat(dg);
+  }
+  function canon(segs) {   // 平行移動しても同じ形なら同じ文字列にする
+    const ps = [...segs].map(parse);
+    let mx = 99, my = 99;
+    ps.forEach(([a, b]) => { mx = Math.min(mx, a[0], b[0]); my = Math.min(my, a[1], b[1]); });
+    return ps.map(([a, b]) => key([a[0] - mx, a[1] - my], [b[0] - mx, b[1] - my])).sort().join('|');
+  }
+  function gen(lvl) {
+    const n = lvl.n, ds = dirsFor(lvl.dirs);
+    let last = null;
+    for (let attempt = 0; attempt < 300; attempt++) {
+      const len = lvl.min + rand(lvl.max - lvl.min + 1);
+      const segs = new Set();
+      let cur = [rand(n), rand(n)];
+      const pts = [cur];
+      let stuck = 0;
+      while (segs.size < len && stuck < 80) {
+        if (segs.size > 0 && Math.random() < 0.25) cur = pts[rand(pts.length)];   // 枝分かれ
+        const d = ds[rand(ds.length)];
+        const nx = [cur[0] + d[0], cur[1] + d[1]];
+        if (nx[0] < 0 || nx[1] < 0 || nx[0] >= n || nx[1] >= n) { stuck++; continue; }
+        const k = key(cur, nx);
+        if (segs.has(k)) { stuck++; continue; }
+        segs.add(k); pts.push(nx); cur = nx;
+      }
+      if (segs.size < len) continue;
+      last = segs;
+      if (lvl.dirs === 'diag' && ![...segs].some(isDiag)) continue;   // ななめを必ず1本入れる
+      const sig = canon(segs);
+      if (recent.includes(sig)) continue;                              // 直前20問と同じ形は出さない
+      recent.push(sig); if (recent.length > 20) recent.shift();
+      return segs;
+    }
+    return last || new Set([key([0,0],[1,0])]);
+  }
+
+  // ---------- 描画 ----------
+  function linesSVG(keys, attrs) {
+    return keys.map(k => {
+      const [a, b] = parse(k);
+      return `<line x1="${pos(a[0])}" y1="${pos(a[1])}" x2="${pos(b[0])}" y2="${pos(b[1])}" ${attrs}/>`;
+    }).join('');
+  }
+  function dotsSVG(r, hl) {
+    const n = L().n; let s = '';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const on = hl && hl[0] === x && hl[1] === y;
+      s += `<circle cx="${pos(x)}" cy="${pos(y)}" r="${on ? r * 1.8 : r}" fill="${on ? 'var(--accent)' : 'var(--dot)'}"/>`;
+    }
+    return s;
+  }
+  const inkLine = () => `stroke="var(--ink)" stroke-width="${lw()}" stroke-linecap="round"`;
+
+  function renderSample() {
+    svgS.innerHTML = linesSVG([...target], inkLine()) + dotsSVG(dotR() * 0.9);
+  }
+  function renderAns() {
+    let s = '';
+    if (judged) {
+      const ok = [...user].filter(k => target.has(k));
+      s += linesSVG(judged.miss, `stroke="var(--miss)" stroke-width="${lw() * 1.1}" stroke-linecap="round" stroke-dasharray="0.1 ${lw() * 2.2}"`);
+      s += linesSVG(ok, inkLine());
+      s += linesSVG(judged.extra, `stroke="var(--bad)" stroke-width="${lw()}" stroke-dasharray="${lw() * 1.6} ${lw() * 1.1}"`);
+    } else {
+      s += linesSVG([...user], inkLine());
+    }
+    if (preview) {
+      const [a, p] = preview;
+      s += `<line x1="${pos(a[0])}" y1="${pos(a[1])}" x2="${p[0]}" y2="${p[1]}" stroke="var(--accent)" stroke-width="${lw()}" stroke-linecap="round" opacity=".55"/>`;
+    }
+    s += dotsSVG(dotR(), pending || (stroke && stroke.from));
+    svgA.innerHTML = s;
+  }
+  function renderLevels() {
+    $('levels').innerHTML = LEVELS.map((l, i) =>
+      `<button class="lv${i === st.lv ? ' on' : ''}" data-i="${i}">レベル${i + 1}<span>${l.sub}</span></button>`).join('');
+  }
+  function renderProg(popIdx) {
+    const c = st.prog[st.lv];
+    let s = '';
+    for (let i = 0; i < PER_PAGE; i++) {
+      s += `<div class="slot${i < c ? ' got' : ''}${i === popIdx ? ' pop' : ''}">${i < c ? ANIMALS[i % ANIMALS.length] : ''}</div>`;
+    }
+    $('prog').innerHTML = s;
+  }
+
+  // ---------- 画面の大きさ（見本と解答を1画面に収める） ----------
+  function layout() {
+    const stage = $('stage');
+    const r = stage.getBoundingClientRect();
+    const W = r.width, H = r.height, lab = 26, gap = 10;
+    const land = W > H * 1.2;
+    stage.classList.toggle('land', land);
+    let a, s;
+    if (!land) {
+      const h = H - 2 * lab - gap;
+      a = Math.min(W, h * 0.6);
+      s = Math.min(h - a, a * 0.72, W);
+    } else {
+      const w = W - 24;
+      a = Math.min(H - lab, w * 0.58);
+      s = Math.min(w - a, a * 0.72, H - lab);
+    }
+    a = Math.max(120, Math.floor(a)); s = Math.max(80, Math.floor(s));
+    Object.assign($('ans').style, { width: a + 'px', height: a + 'px' });
+    Object.assign($('smp').style, { width: s + 'px', height: s + 'px' });
+  }
+
+  // ---------- 音と声 ----------
+  let ac = null;
+  function unlockAudio() {
+    if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    if (ac && ac.state === 'suspended') ac.resume();
+  }
+  function tone(f, t0, d, type, g) {
+    const o = ac.createOscillator(), v = ac.createGain();
+    o.type = type; o.frequency.value = f;
+    v.gain.setValueAtTime(0.0001, t0);
+    v.gain.exponentialRampToValueAtTime(g, t0 + 0.015);
+    v.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+    o.connect(v); v.connect(ac.destination);
+    o.start(t0); o.stop(t0 + d + 0.05);
+  }
+  function tick() { if (st.muted || !ac) return; tone(880, ac.currentTime, 0.08, 'triangle', 0.07); }
+  function clap() {
+    if (st.muted || !ac) return;
+    const t = ac.currentTime;
+    [523, 659, 784, 1047].forEach((f, i) => tone(f, t + i * 0.09, 0.4, 'triangle', 0.12));
+    const len = Math.floor(ac.sampleRate * 0.08);
+    const buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    for (let i = 0; i < 9; i++) {
+      const src = ac.createBufferSource(); src.buffer = buf;
+      const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1100 + Math.random() * 900;
+      const g = ac.createGain(); g.gain.value = 0.55;
+      src.connect(f); f.connect(g); g.connect(ac.destination);
+      src.start(t + 0.5 + i * 0.11 + Math.random() * 0.04);
+    }
+  }
+  function boo() {
+    if (st.muted || !ac) return;
+    const t = ac.currentTime;
+    tone(523, t, 0.22, 'sine', 0.1); tone(392, t + 0.2, 0.35, 'sine', 0.1);
+  }
+  let jaVoice = null;
+  function pickVoice() {
+    try { jaVoice = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('ja')) || null; } catch (e) {}
+  }
+  if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+  function say(text) {
+    if (st.muted || !('speechSynthesis' in window)) return;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP'; u.rate = 0.95; u.pitch = 1.15;
+      if (jaVoice) u.voice = jaVoice;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  let toastTimer = 0;
+  function toast(text) {
+    const el = $('toast'); el.textContent = text; el.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 1600);
+  }
+  function hint() { toast('てんから てんまで かこうね'); say('てんから てんまで かこうね'); }
+
+  // ---------- 問題の進行 ----------
+  function newProblem() {
+    target = gen(L());
+    user = new Set(); hist = []; judged = null; pending = null; stroke = null; erasing = null; preview = null;
+    setMode('draw'); hideSheet();
+    renderSample(); renderAns();
+  }
+  function setMode(m) {
+    mode = m;
+    const on = m === 'erase';
+    $('eraser').classList.toggle('on', on);
+    $('ans').classList.toggle('erasing', on);
+    const tag = $('ansTag');
+    tag.classList.toggle('erase', on);
+    tag.textContent = on ? 'けしゴム：けしたい せんを なぞってね' : 'ここに かこう';
+  }
+  function clearMarks() { if (judged) { judged = null; hideSheet(); } }
+
+  function judge() {
+    if (busy) return;
+    unlockAudio();
+    pending = null; setMode('draw');
+    if (user.size === 0) { toast('せんを かいてね'); say('せんを かいてね'); renderAns(); return; }
+    const extra = [...user].filter(k => !target.has(k));
+    const miss = [...target].filter(k => !user.has(k));
+    if (!extra.length && !miss.length) correct();
+    else wrong(extra, miss);
+  }
+  function correct() {
+    busy = true;
+    const lv = st.lv;
+    st.prog[lv] = Math.min(PER_PAGE, st.prog[lv] + 1);
+    const c = st.prog[lv];
+    save(); renderProg(c - 1);
+    const stamp = $('okStamp');
+    stamp.textContent = ANIMALS[(c - 1) % ANIMALS.length];
+    stamp.style.animation = 'none'; void stamp.offsetWidth; stamp.style.animation = '';
+    const full = c >= PER_PAGE;
+    $('okText').textContent = full ? 'ページ かんせい！' : 'できたね！';
+    $('ok').classList.add('show');
+    clap();
+    say(full ? 'すごい！ ページが かんせいしたよ' : 'できたね！');
+  }
+  function wrong(extra, miss) {
+    judged = { extra, miss };
+    renderAns();
+    const parts = [];
+    if (extra.length) parts.push('<span><i></i>いらない せん</span>');
+    if (miss.length) parts.push('<span><i class="m"></i>たりない せん</span>');
+    $('legend').innerHTML = parts.join('');
+    $('sheet').classList.add('show');
+    boo();
+    say('おしい！ もういちど みてみよう');
+  }
+  function hideSheet() { $('sheet').classList.remove('show'); }
+
+  // ---------- 指の操作 ----------
+  function local(e) {
+    const r = svgA.getBoundingClientRect();
+    return [(e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100];
+  }
+  function nearest(p) {
+    const n = L().n; let best = null, bd = 1e9;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const d = Math.hypot(pos(x) - p[0], pos(y) - p[1]);
+      if (d < bd) { bd = d; best = [x, y]; }
+    }
+    return bd <= step() * 0.42 ? best : null;
+  }
+  function addLine(a, b, bucket) {
+    for (const k of units(a, b)) if (!user.has(k)) { user.add(k); bucket.push(k); }
+  }
+  function distSeg(p, a, b) {
+    const ax = pos(a[0]), ay = pos(a[1]), bx = pos(b[0]), by = pos(b[1]);
+    const dx = bx - ax, dy = by - ay;
+    let t = ((p[0] - ax) * dx + (p[1] - ay) * dy) / (dx * dx + dy * dy);
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(p[0] - ax - t * dx, p[1] - ay - t * dy);
+  }
+  function eraseAt(p) {
+    const th = Math.max(4, step() * 0.16);
+    for (const k of [...user]) {
+      const [a, b] = parse(k);
+      if (distSeg(p, a, b) < th) { user.delete(k); erasing.keys.push(k); }
+    }
+  }
+
+  svgA.addEventListener('pointerdown', e => {
+    if (busy || stroke || erasing) return;
+    e.preventDefault();
+    unlockAudio();
+    try { svgA.setPointerCapture(e.pointerId); } catch (err) {}
+    clearMarks();
+    const p = local(e);
+
+    if (mode === 'erase') {
+      erasing = { id: e.pointerId, keys: [] };
+      eraseAt(p); renderAns(); return;
+    }
+    const d = nearest(p);
+    if (!d) { pending = null; renderAns(); hint(); return; }
+
+    // 点を2回タップして線を引く
+    if (pending) {
+      if (!same(pending, d)) {
+        const b = []; addLine(pending, d, b);
+        if (b.length) { hist.push({ t: 'add', k: b }); tick(); }
+      }
+      pending = null; renderAns(); return;
+    }
+    stroke = { id: e.pointerId, from: d, start: d, down: p, moved: false, added: [] };
+    preview = null; renderAns();
+  });
+
+  svgA.addEventListener('pointermove', e => {
+    const p = local(e);
+    if (erasing && e.pointerId === erasing.id) { eraseAt(p); renderAns(); return; }
+    if (!stroke || e.pointerId !== stroke.id) return;
+    if (Math.hypot(p[0] - stroke.down[0], p[1] - stroke.down[1]) > step() * 0.3) stroke.moved = true;
+    const d = nearest(p);
+    if (d && !same(d, stroke.from)) {              // 次の点に届いたら線を確定し、そこから続ける
+      const before = stroke.added.length;
+      addLine(stroke.from, d, stroke.added);
+      if (stroke.added.length > before) tick();
+      stroke.from = d;
+    }
+    preview = stroke.moved ? [stroke.from, p] : null;
+    renderAns();
+  });
+
+  function endPointer(e) {
+    if (erasing && e.pointerId === erasing.id) {
+      if (erasing.keys.length) hist.push({ t: 'del', k: erasing.keys });
+      erasing = null; renderAns(); return;
+    }
+    if (!stroke || e.pointerId !== stroke.id) return;
+    if (stroke.added.length) hist.push({ t: 'add', k: stroke.added });
+    else if (!stroke.moved) pending = stroke.start;       // タップだけ → 1つめの点として選ぶ
+    else hint();                                          // 点に届かずに離した
+    stroke = null; preview = null; renderAns();
+  }
+  svgA.addEventListener('pointerup', endPointer);
+  svgA.addEventListener('pointercancel', endPointer);
+
+  // ---------- ボタン ----------
+  $('undo').addEventListener('click', () => {
+    if (busy) return;
+    clearMarks(); pending = null;
+    const h = hist.pop();
+    if (h) {
+      if (h.t === 'add') h.k.forEach(k => user.delete(k));
+      else h.k.forEach(k => user.add(k));
+    }
+    renderAns();
+  });
+  $('eraser').addEventListener('click', () => {
+    if (busy) return;
+    pending = null; clearMarks();
+    setMode(mode === 'erase' ? 'draw' : 'erase');
+    renderAns();
+  });
+  $('clear').addEventListener('click', () => {
+    if (busy) return;
+    clearMarks(); pending = null;
+    if (user.size) { hist.push({ t: 'del', k: [...user] }); user.clear(); }
+    renderAns();
+  });
+  $('done').addEventListener('click', judge);
+  $('fix').addEventListener('click', () => { hideSheet(); });
+  $('skip').addEventListener('click', () => { newProblem(); });
+  $('next').addEventListener('click', () => {
+    $('ok').classList.remove('show');
+    if (st.prog[st.lv] >= PER_PAGE) { st.prog[st.lv] = 0; save(); renderProg(); }
+    busy = false;
+    newProblem();
+  });
+  $('levels').addEventListener('click', e => {
+    const b = e.target.closest('.lv'); if (!b || busy) return;
+    const i = Number(b.dataset.i);
+    if (i === st.lv) return;
+    st.lv = i; save(); recent = [];
+    renderLevels(); renderProg(); newProblem(); layout();
+  });
+  const renderSound = () => { $('sound').textContent = st.muted ? '🔇' : '🔊'; };
+  $('sound').addEventListener('click', () => {
+    st.muted = !st.muted; save(); renderSound();
+    if (st.muted && 'speechSynthesis' in window) speechSynthesis.cancel();
+  });
+
+  // ---------- 拡大・スクロール防止 ----------
+  document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+  document.addEventListener('gesturestart', e => e.preventDefault());
+  document.addEventListener('dblclick', e => e.preventDefault());
+  window.addEventListener('resize', layout);
+  window.addEventListener('orientationchange', () => setTimeout(layout, 200));
+
+  // ---------- 開始 ----------
+  renderLevels(); renderProg(); renderSound();
+  newProblem();
+  layout(); requestAnimationFrame(layout);
+})();
+</script>
+</body>
+</html>
