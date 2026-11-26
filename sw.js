@@ -1,6 +1,6 @@
 // 点つなぎ：オフラインでも開けるようにするための Service Worker
 // ネットにつながるときは最新版を取りに行き、つながらないときは保存しておいたものを使う。
-const CACHE = 'tentsunagi-v1';
+const CACHE = 'tentsunagi-v2';
 const FILES = [
   './',
   './index.html',

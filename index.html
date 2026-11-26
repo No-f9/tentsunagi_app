@@ -97,7 +97,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;borde
 #ans{border-color:#F6C9A3}
 #ans.erasing{border-color:var(--erase);border-style:dashed}
 svg{display:block;width:100%;height:100%;touch-action:none}
-#toolbar{display:grid;grid-template-columns:1fr 1fr 1fr 1.6fr;gap:10px}
+#toolbar{display:grid;grid-template-columns:1fr 1fr 1.8fr;gap:10px}
 .tb{border-radius:20px;font-weight:800;font-size:15px;min-height:76px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:4px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 #E8DBC2}
 .tb .ic{font-size:28px;line-height:1;height:30px;display:grid;place-items:center}
@@ -144,6 +144,40 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
 .btn.warn{background:#FCE3E4;color:#B4232A}
 .btn.pri{background:var(--accent);color:#fff}
 .btns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ===== ユーザー ===== */
+.who{align-self:center;display:flex;align-items:center;gap:12px;background:var(--card);border:3px solid var(--line);border-radius:999px;
+  padding:6px 20px 6px 6px;box-shadow:0 4px 0 #EFE3CB;min-height:64px}
+.who:active{transform:translateY(3px);box-shadow:0 1px 0 #EFE3CB}
+.who b{font-size:22px}
+.who small{font-size:13px;color:var(--soft);font-weight:800}
+.av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;background:var(--accent)}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av.xl{width:128px;height:128px;font-size:52px}
+.av.sm{width:30px;height:30px;font-size:14px}
+#who{align-items:center;justify-content:center}
+.who-wrap{width:100%;max-width:820px;display:flex;flex-direction:column;gap:28px;align-items:center}
+.who-wrap h2{font-size:34px;margin:0}
+.who-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;width:100%}
+.who-tile{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:20px 16px 16px;width:184px;display:flex;flex-direction:column;
+  align-items:center;gap:12px;font-size:22px;font-weight:900;box-shadow:0 5px 0 #EFE3CB;word-break:break-all}
+.who-tile.on{border-color:var(--accent)}
+.who-tile:active{transform:translateY(3px);box-shadow:0 2px 0 #EFE3CB}
+.ucard{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.ucard .av{width:76px;height:76px;font-size:32px}
+.photo-btn{flex:none;position:relative}
+.photo-btn::after{content:'📷';position:absolute;right:-4px;bottom:-4px;font-size:18px;background:#fff;border-radius:50%;width:30px;height:30px;
+  display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.ubody{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.uname{font:inherit;font-size:18px;font-weight:800;border:2px solid var(--line);border-radius:12px;padding:8px 12px;width:100%;max-width:300px;
+  touch-action:auto;background:#fff;color:var(--ink)}
+.lvsel{display:flex;gap:8px;flex-wrap:wrap}
+.lvsel label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--soft);background:var(--sand);border-radius:12px;padding:4px 4px 4px 10px}
+.lvsel select{font:inherit;font-size:15px;font-weight:800;border:0;border-radius:9px;padding:6px 8px;background:var(--card);color:var(--ink);min-height:40px}
+.btn.sm{padding:8px 12px;font-size:14px;min-height:40px}
+.seg.users button{display:flex;align-items:center;gap:6px}
+input,textarea,select{-webkit-user-select:text;user-select:text}
+#smp{cursor:zoom-in}
 
 /* ===== ひとこと・まちがい・せいかい・ダイアログ ===== */
 #toast{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.9);background:#fff;border-radius:20px;
@@ -201,6 +235,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
         <svg viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" fill="#FFF6E6"/><rect x="56" y="56" width="400" height="400" rx="72" fill="#fff" stroke="#F6C9A3" stroke-width="14"/><g stroke="#FF8A3D" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M140 256 L256 140 L372 256 L372 372 L140 372 Z"/><path d="M140 256 L372 256"/></g><g fill="#55648A"><circle cx="140" cy="140" r="24"/><circle cx="256" cy="140" r="24"/><circle cx="372" cy="140" r="24"/><circle cx="140" cy="256" r="24"/><circle cx="256" cy="256" r="24"/><circle cx="372" cy="256" r="24"/><circle cx="140" cy="372" r="24"/><circle cx="256" cy="372" r="24"/><circle cx="372" cy="372" r="24"/></g></svg>
         <h1>点つなぎ</h1>
       </div>
+      <button class="who" id="whoBtn" aria-label="ユーザーをかえる"></button>
       <div class="modes" id="modes"></div>
       <button class="main-card" id="goMain">
         <div class="mc-top"><span class="mc-k">れんしゅう</span><span class="mc-lv" id="homeLv">レベル 1</span></div>
@@ -215,6 +250,14 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     </div>
   </section>
 
+  <!-- だれが あそぶ？ -->
+  <section class="screen" id="who">
+    <div class="who-wrap">
+      <h2>だれが あそぶ？</h2>
+      <div class="who-grid" id="whoGrid"></div>
+    </div>
+  </section>
+
   <!-- 練習 -->
   <section class="screen" id="play">
     <div class="phead">
@@ -224,11 +267,10 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     </div>
     <div id="prog"></div>
     <div id="stage">
-      <div class="board"><div class="tagrow"><span class="tag">みほん</span><span class="tag howto" id="howto"></span></div><div class="card" id="smp"><svg id="svgS" viewBox="0 0 100 100"></svg></div></div>
+      <div class="board"><div class="tagrow"><span class="tag">みほん</span><span class="tag howto" id="howto"></span><span class="tag" id="zoomTag">🔍 タップで おおきく</span></div><div class="card" id="smp"><svg id="svgS" viewBox="0 0 100 100"></svg></div></div>
       <div class="board"><div class="tagrow"><span class="tag" id="ansTag">ここに かこう</span></div><div class="card" id="ans"><svg id="svgA" viewBox="0 0 100 100"></svg></div></div>
     </div>
     <div id="toolbar">
-      <button class="tb" id="undo"><span class="ic">↩️</span>もどす</button>
       <button class="tb" id="eraser"><span class="ic"><svg viewBox="0 0 32 32" width="30" height="30"><g transform="rotate(-35 16 16)"><rect x="3" y="10" width="26" height="12" rx="3" fill="#F7A8CF" stroke="#2B2D42" stroke-width="1.5"/><rect x="3" y="10" width="10" height="12" rx="3" fill="#8DB8F2" stroke="#2B2D42" stroke-width="1.5"/></g></svg></span>けしゴム</button>
       <button class="tb" id="clear"><span class="ic">🗑️</span>ぜんぶけす</button>
       <button class="tb" id="done"><span class="ic">⭐</span>できた！</button>
@@ -272,6 +314,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   </div>
 </div>
 
+<input type="file" accept="image/*" id="photoIn" hidden>
 <div class="overlay" id="dlg"><div class="dlg-card" id="dlgCard"></div></div>
 
 <script>
@@ -291,16 +334,22 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   const svgS = $('svgS'), svgA = $('svgA');
 
   // ================= 保存データ =================
-  const fresh = () => ({
-    ver: 1, mode: 'normal',
+  // db = { users:[ユーザーごとの進み具合], cur:いまのユーザーID, muted, layout, bigSample }
+  // st = いまのユーザー（レベル・スタンプ・とっくん・記録）
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const freshProgress = () => ({
+    mode: 'normal',
     modes: { normal: { lv: 1, c: 0 }, flip: { lv: 1, c: 0 }, mirror: { lv: 1, c: 0 } },
     drill: [], days: {},
     mstat: { normal: { t: 0, c: 0 }, flip: { t: 0, c: 0 }, mirror: { t: 0, c: 0 } },
-    muted: false, layout: 'auto',
   });
-  function sanitize(s) {
-    const d = fresh();
+  const freshUser = name => Object.assign({ id: uid(), name, photo: '' }, freshProgress());
+  function sanitizeUser(s, name) {
+    const d = freshUser(name);
     if (!s || typeof s !== 'object') return d;
+    if (typeof s.id === 'string' && /^[\w-]{1,40}$/.test(s.id)) d.id = s.id;
+    if (typeof s.name === 'string' && s.name.trim()) d.name = s.name.trim().slice(0, 12);
+    if (typeof s.photo === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(s.photo) && s.photo.length < 300000) d.photo = s.photo;
     if (MODE_KEYS.includes(s.mode)) d.mode = s.mode;
     for (const m of MODE_KEYS) {
       const v = s.modes && s.modes[m];
@@ -309,14 +358,43 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
       if (t) d.mstat[m] = { t: Math.max(0, t.t | 0), c: Math.max(0, t.c | 0) };
     }
     if (Array.isArray(s.drill)) d.drill = s.drill.filter(x => x && Array.isArray(x.segs) && MODE_KEYS.includes(x.mode)).slice(-50);
-    if (s.days && typeof s.days === 'object') d.days = s.days;
-    d.muted = !!s.muted;
-    if (['auto', 'tb', 'lr'].includes(s.layout)) d.layout = s.layout;
+    if (s.days && typeof s.days === 'object' && !Array.isArray(s.days)) d.days = s.days;
     return d;
   }
-  let st = fresh();
-  try { st = sanitize(JSON.parse(localStorage.getItem(STORE))); } catch (e) {}
-  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(st)); } catch (e) {} };
+  function sanitizeDB(o) {
+    const d = { ver: 2, users: [], cur: '', muted: false, layout: 'auto', bigSample: false };
+    if (o && typeof o === 'object') {
+      if (Array.isArray(o.users)) d.users = o.users.slice(0, 12).map((u, i) => sanitizeUser(u, 'ユーザー' + (i + 1)));
+      else if (o.modes) d.users = [sanitizeUser(o, 'ユーザー1')];           // 1人用だったころのデータを引き継ぐ
+      if (typeof o.cur === 'string') d.cur = o.cur;
+      d.muted = !!o.muted;
+      if (['auto', 'tb', 'lr'].includes(o.layout)) d.layout = o.layout;
+      d.bigSample = !!o.bigSample;
+    }
+    if (!d.users.length) d.users = [freshUser('ユーザー1')];
+    const ids = new Set();
+    d.users.forEach(u => { if (ids.has(u.id)) u.id = uid(); ids.add(u.id); });
+    if (!d.users.some(u => u.id === d.cur)) d.cur = d.users[0].id;
+    return d;
+  }
+  let db = sanitizeDB(null);
+  try { db = sanitizeDB(JSON.parse(localStorage.getItem(STORE))); } catch (e) {}
+  let st = db.users.find(u => u.id === db.cur);
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify(db)); }
+    catch (e) { toast('ほぞんできませんでした'); }
+  }
+  function setUser(id) {
+    const u = db.users.find(x => x.id === id); if (!u) return;
+    db.cur = u.id; st = u; recent = []; save();
+  }
+  const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const AV_COLORS = ['#FF8A3D', '#7B61FF', '#14A3B8', '#2FA36B', '#E5484D', '#D45C9E'];
+  function avatar(u, cls = '') {
+    if (u.photo) return `<span class="av ${cls}"><img src="${esc(u.photo)}" alt=""></span>`;
+    const i = Math.max(0, db.users.indexOf(u));
+    return `<span class="av ${cls}" style="background:${AV_COLORS[i % AV_COLORS.length]}">${esc(u.name.slice(0, 1))}</span>`;
+  }
 
   // ================= 線のデータ =================
   function key(a, b) {
@@ -464,9 +542,9 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     o.connect(v); v.connect(ac.destination);
     o.start(t0); o.stop(t0 + d + 0.05);
   }
-  const tick = () => { if (!st.muted && ac) tone(880, ac.currentTime, 0.08, 'triangle', 0.07); };
+  const tick = () => { if (!db.muted && ac) tone(880, ac.currentTime, 0.08, 'triangle', 0.07); };
   function clap(big) {
-    if (st.muted || !ac) return;
+    if (db.muted || !ac) return;
     const t = ac.currentTime;
     const notes = big ? [523, 659, 784, 1047, 1319, 1568] : [523, 659, 784, 1047];
     notes.forEach((f, i) => tone(f, t + i * 0.09, 0.4, 'triangle', 0.12));
@@ -482,12 +560,12 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
       src.start(t + start + i * 0.11 + Math.random() * 0.04);
     }
   }
-  function boo() { if (st.muted || !ac) return; const t = ac.currentTime; tone(523, t, 0.22, 'sine', 0.1); tone(392, t + 0.2, 0.35, 'sine', 0.1); }
+  function boo() { if (db.muted || !ac) return; const t = ac.currentTime; tone(523, t, 0.22, 'sine', 0.1); tone(392, t + 0.2, 0.35, 'sine', 0.1); }
   let jaVoice = null;
   function pickVoice() { try { jaVoice = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('ja')) || null; } catch (e) {} }
   if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
   function say(text) {
-    if (st.muted || !text || !('speechSynthesis' in window)) return;
+    if (db.muted || !text || !('speechSynthesis' in window)) return;
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
@@ -510,12 +588,14 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     screen = name;
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === name));
     if (name === 'home') renderHome();
+    if (name === 'who') renderWho();
     if (name === 'play') requestAnimationFrame(layout);
   }
   document.querySelectorAll('.back').forEach(b => b.addEventListener('click', () => show('home')));
 
   // ================= ホーム =================
-  const unlocked = m => m === 'normal' || st.modes.normal.lv > 5;
+  // ふつうのLv5クリアで解放。おうちのかたが設定でレベルを上げたモードも選べる
+  const unlocked = (m, u = st) => m === 'normal' || u.modes.normal.lv > 5 || u.modes[m].lv > 1;
   function stampSlots(count, popIdx) {
     let s = '';
     for (let i = 0; i < PER_PAGE; i++) s += `<div class="slot${i < count ? ' got' : ''}${i === popIdx ? ' pop' : ''}">${i < count ? ANIMALS[i] : ''}</div>`;
@@ -523,6 +603,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   }
   function renderHome() {
     if (!unlocked(st.mode)) st.mode = 'normal';
+    $('whoBtn').innerHTML = avatar(st) + `<span><b>${esc(st.name)}</b>${db.users.length > 1 ? '<br><small>タップで かえる</small>' : ''}</span>`;
     $('modes').innerHTML = MODE_KEYS.map(m => {
       const M = MODES[m], lock = !unlocked(m);
       return `<button class="mode${st.mode === m ? ' on' : ''}${lock ? ' locked' : ''}" data-m="${m}">
@@ -541,6 +622,19 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     st.mode = m; save(); renderHome();
     say(MODES[m].label);
   });
+
+  // ================= だれが あそぶ？ =================
+  function renderWho() {
+    $('whoGrid').innerHTML = db.users.map(u =>
+      `<button class="who-tile${u.id === db.cur ? ' on' : ''}" data-id="${esc(u.id)}">${avatar(u, 'xl')}${esc(u.name)}</button>`).join('');
+  }
+  $('whoGrid').addEventListener('click', e => {
+    const b = e.target.closest('.who-tile'); if (!b) return;
+    unlockAudio();
+    setUser(b.dataset.id);
+    show('home');
+  });
+  $('whoBtn').addEventListener('click', () => { if (db.users.length > 1) show('who'); else { renderSettings(); show('settings'); } });
 
   // ================= 練習 =================
   // session.src: 'main'（れんしゅう） / 'review'（おさらい） / 'drill'（とっくん）
@@ -574,7 +668,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     }
     user = new Set(); hist = []; judged = null; pending = null; stroke = null; erasing = null; preview = null; busy = false;
     setMode('draw'); hideSheet();
-    renderPlayHead(); renderSample(); renderAns(); layout();
+    renderPlayHead(); renderSample(); renderAns(); renderZoomTag(); layout();
     startTimer();
     if (!session.introDone) { session.introDone = true; if (prob.mode !== 'normal') say(MODES[prob.mode].say); }
   }
@@ -630,15 +724,28 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     const stage = $('stage'), r = stage.getBoundingClientRect();
     const W = r.width, H = r.height, lab = 28, gap = 10;
     if (W < 10 || H < 10) return;
-    const land = st.layout === 'lr' ? true : st.layout === 'tb' ? false : W > H * 1.2;
+    const land = db.layout === 'lr' ? true : db.layout === 'tb' ? false : W > H * 1.2;
     stage.classList.toggle('land', land);
     let a, s;
-    if (!land) { const h = H - 2 * lab - gap; a = Math.min(W, h * 0.6); s = Math.min(h - a, a * 0.72, W); }
-    else { const w = W - 24; a = Math.min(H - lab, w * 0.58); s = Math.min(w - a, a * 0.72, H - lab); }
+    if (!land) {
+      const h = H - 2 * lab - gap;
+      if (db.bigSample) a = s = Math.min(W, h / 2);                       // 見本を解答と同じ大きさに
+      else { a = Math.min(W, h * 0.6); s = Math.min(h - a, a * 0.72, W); }
+    } else {
+      const w = W - 24;
+      if (db.bigSample) a = s = Math.min(H - lab, w / 2);
+      else { a = Math.min(H - lab, w * 0.58); s = Math.min(w - a, a * 0.72, H - lab); }
+    }
     a = Math.max(120, Math.floor(a)); s = Math.max(80, Math.floor(s));
     Object.assign($('ans').style, { width: a + 'px', height: a + 'px' });
     Object.assign($('smp').style, { width: s + 'px', height: s + 'px' });
   }
+
+  function renderZoomTag() { $('zoomTag').textContent = db.bigSample ? '🔍 タップで ちいさく' : '🔍 タップで おおきく'; }
+  $('smp').addEventListener('click', () => {
+    if (busy) return;
+    db.bigSample = !db.bigSample; save(); renderZoomTag(); layout();
+  });
 
   function setMode(m) {
     mode = m;
@@ -817,13 +924,6 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   svgA.addEventListener('pointerup', endPointer);
   svgA.addEventListener('pointercancel', endPointer);
 
-  $('undo').addEventListener('click', () => {
-    if (busy) return;
-    clearMarks(); pending = null;
-    const h = hist.pop();
-    if (h) { if (h.t === 'add') h.k.forEach(k => user.delete(k)); else h.k.forEach(k => user.add(k)); }
-    renderAns();
-  });
   $('eraser').addEventListener('click', () => { if (busy) return; pending = null; clearMarks(); setMode(mode === 'erase' ? 'draw' : 'erase'); renderAns(); });
   $('clear').addEventListener('click', () => {
     if (busy) return;
@@ -833,10 +933,10 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   });
   $('done').addEventListener('click', judge);
   $('toHome').addEventListener('click', () => { hideSheet(); show('home'); });
-  const renderSound = () => { $('sound').textContent = st.muted ? '🔇' : '🔊'; };
+  const renderSound = () => { $('sound').textContent = db.muted ? '🔇' : '🔊'; };
   $('sound').addEventListener('click', () => {
-    st.muted = !st.muted; save(); renderSound();
-    if (st.muted && 'speechSynthesis' in window) speechSynthesis.cancel();
+    db.muted = !db.muted; save(); renderSound();
+    if (db.muted && 'speechSynthesis' in window) speechSynthesis.cancel();
   });
 
   // ================= ホームのボタン =================
@@ -847,7 +947,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     startSession('drill');
   });
   $('goReview').addEventListener('click', () => { unlockAudio(); renderReview(); show('review'); });
-  $('goRecords').addEventListener('click', () => { renderRecords(); show('records'); });
+  $('goRecords').addEventListener('click', () => { recUser = db.cur; renderRecords(); show('records'); });
   $('goSettings').addEventListener('click', () => { renderSettings(); show('settings'); });
 
   // ================= おさらい =================
@@ -870,27 +970,33 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   // ================= きろく（保護者向け） =================
   const fmtMin = ms => { const m = Math.round(ms / 60000); return m < 60 ? m + '分' : Math.floor(m / 60) + '時間' + (m % 60) + '分'; };
   const pct = (c, t) => (t ? Math.round(c / t * 100) + '%' : '—');
+  let recUser = '';
   function renderRecords() {
+    const u = db.users.find(x => x.id === recUser) || st;
     const today = new Date(), rows = [];
     let wT = 0, wC = 0, wMs = 0;
     for (let i = 13; i >= 0; i--) {
       const d = new Date(today); d.setDate(d.getDate() - i);
-      const v = st.days[dayKey(d)] || { t: 0, c: 0, ms: 0 };
-      rows.push({ lbl: (d.getMonth() + 1) + '/' + d.getDate(), ...v });
-      if (i < 7) { wT += v.t; wC += v.c; wMs += v.ms || 0; }
+      const v = u.days[dayKey(d)] || { t: 0, c: 0, ms: 0 };
+      rows.push({ lbl: (d.getMonth() + 1) + '/' + d.getDate(), t: v.t || 0, c: v.c || 0, ms: v.ms || 0 });
+      if (i < 7) { wT += v.t || 0; wC += v.c || 0; wMs += v.ms || 0; }
     }
-    const td = st.days[dayKey()] || { t: 0, c: 0, ms: 0 };
+    const td = u.days[dayKey()] || { t: 0, c: 0, ms: 0 };
     const maxC = Math.max(1, ...rows.map(r => r.c));
-    const bars = rows.reverse().map(r => `<div class="bar-row"><span class="lbl">${r.lbl}</span><div class="bar-track"><div class="bar-fill" style="width:${r.c / maxC * 100}%"></div></div><span class="num">${r.c}問 / ${fmtMin(r.ms || 0)}</span></div>`).join('');
+    const bars = rows.reverse().map(r => `<div class="bar-row"><span class="lbl">${r.lbl}</span><div class="bar-track"><div class="bar-fill" style="width:${r.c / maxC * 100}%"></div></div><span class="num">${r.c}問 / ${fmtMin(r.ms)}</span></div>`).join('');
     const modeRows = MODE_KEYS.map(m => {
-      const s = st.mstat[m], p = st.modes[m];
-      return `<tr><td>${MODES[m].sub}</td><td class="r">${unlocked(m) ? 'Lv' + p.lv + '（' + p.c + '/20）' : '未解放'}</td><td class="r">${s.c} / ${s.t}</td><td class="r">${pct(s.c, s.t)}</td></tr>`;
+      const s = u.mstat[m], p = u.modes[m];
+      return `<tr><td>${MODES[m].sub}</td><td class="r">${unlocked(m, u) ? 'Lv' + p.lv + '（' + p.c + '/20）' : '未解放'}</td><td class="r">${s.c} / ${s.t}</td><td class="r">${pct(s.c, s.t)}</td></tr>`;
     }).join('');
-    const weak = MODE_KEYS.filter(m => st.mstat[m].t >= 10).sort((a, b) => st.mstat[a].c / st.mstat[a].t - st.mstat[b].c / st.mstat[b].t)[0];
-    const drillBy = MODE_KEYS.map(m => `${MODES[m].sub} ${st.drill.filter(d => d.mode === m).length}問`).join('・');
+    const weak = MODE_KEYS.filter(m => u.mstat[m].t >= 10).sort((a, b) => u.mstat[a].c / u.mstat[a].t - u.mstat[b].c / u.mstat[b].t)[0];
+    const drillBy = MODE_KEYS.map(m => `${MODES[m].sub} ${u.drill.filter(d => d.mode === m).length}問`).join('・');
+    const picker = db.users.length > 1
+      ? `<div class="seg users" id="recUsers">${db.users.map(x => `<button data-id="${esc(x.id)}" class="${x === u ? 'on' : ''}">${avatar(x, 'sm')}${esc(x.name)}</button>`).join('')}</div>`
+      : '';
     $('recordsBody').innerHTML = `
+      ${picker}
       <div class="kpis">
-        <div class="kpi"><b>${td.c}問</b><span>今日の正解（挑戦 ${td.t}回）</span></div>
+        <div class="kpi"><b>${td.c || 0}問</b><span>今日の正解（挑戦 ${td.t || 0}回）</span></div>
         <div class="kpi"><b>${wC}問</b><span>7日間の正解・正答率 ${pct(wC, wT)}</span></div>
         <div class="kpi"><b>${fmtMin(wMs)}</b><span>7日間の練習時間</span></div>
       </div>
@@ -899,42 +1005,121 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
         <table><thead><tr><th>モード</th><th class="r">いまのレベル</th><th class="r">正解 / 挑戦</th><th class="r">正答率</th></tr></thead><tbody>${modeRows}</tbody></table>
         <p>${weak ? `正答率がいちばん低いのは「${MODES[weak].sub}」です。` : '10回以上挑戦すると、苦手なモードを表示します。'}</p>
       </div>
-      <div class="panel"><h3>とっくん（間違えた問題）</h3><p>残り ${st.drill.length}問（${drillBy}）。正解すると一覧から消えます。</p></div>
+      <div class="panel"><h3>とっくん（間違えた問題）</h3><p>残り ${u.drill.length}問（${drillBy}）。正解すると一覧から消えます。</p></div>
       <div class="panel"><h3>データの引っ越し</h3>
-        <p>機種変更やブラウザの入れ替えの前に書き出しておくと、別の端末で読み込んで続きから使えます。</p>
+        <p>機種変更やブラウザの入れ替えの前に書き出しておくと、別の端末で読み込んで続きから使えます（全員分・写真も含みます）。</p>
         <div class="btns"><button class="btn" id="exp">書き出す</button><button class="btn" id="imp">読み込む</button></div>
       </div>`;
+    const ru = $('recUsers');
+    if (ru) ru.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { recUser = b.dataset.id; renderRecords(); } });
     $('exp').addEventListener('click', exportData);
     $('imp').addEventListener('click', importData);
   }
 
   // ================= せってい（保護者向け） =================
+  let photoTarget = '';
   function renderSettings() {
     const seg = (name, cur, opts) => `<div class="seg" data-k="${name}">${opts.map(([v, l]) => `<button data-v="${v}" class="${cur === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+    const lvOpts = cur => Array.from({ length: MAX_LV }, (_, i) => `<option value="${i + 1}"${i + 1 === cur ? ' selected' : ''}>レベル${i + 1}</option>`).join('');
+    const users = db.users.map(u => `
+      <div class="ucard" data-id="${esc(u.id)}">
+        <button class="photo-btn" data-act="photo" aria-label="写真を選ぶ">${avatar(u)}</button>
+        <div class="ubody">
+          <input class="uname" data-act="name" value="${esc(u.name)}" maxlength="12" placeholder="なまえ" enterkeyhint="done">
+          <div class="lvsel">${MODE_KEYS.map(m => `<label>${MODES[m].sub}<select data-act="lv" data-m="${m}">${lvOpts(u.modes[m].lv)}</select></label>`).join('')}</div>
+          <div class="btns">
+            <button class="btn sm" data-act="photo">写真を選ぶ</button>
+            ${u.photo ? '<button class="btn sm" data-act="unphoto">写真を外す</button>' : ''}
+            <button class="btn sm" data-act="reset">進み具合をリセット</button>
+            ${db.users.length > 1 ? '<button class="btn sm warn" data-act="del">削除</button>' : ''}
+          </div>
+        </div>
+      </div>`).join('');
     $('settingsBody').innerHTML = `
-      <div class="panel">
-        <div class="set-row"><div class="l">音と声<small>効果音と読み上げ</small></div>${seg('muted', st.muted ? 'off' : 'on', [['on', 'オン'], ['off', 'オフ']])}</div>
-        <div class="set-row"><div class="l">見本と解答の並べ方<small>「自動」は画面の向きに合わせます</small></div>${seg('layout', st.layout, [['auto', '自動'], ['tb', '上下'], ['lr', '左右']])}</div>
+      <div class="panel"><h3>ユーザー</h3>
+        <p>丸い所をタップすると写真を選べます。レベルを変えると、そのモードはそのレベルのスタンプ0個から始まります。「上下逆転」「鏡絵」は、普通のレベル6以上か、ここでレベル2以上にすると選べるようになります。</p>
+        ${users}
+        <div class="btns" style="margin-top:6px"><button class="btn pri" id="addUser">＋ ユーザーを追加</button></div>
       </div>
-      <div class="panel"><h3>進み具合をリセット</h3>
-        <p>すべてのモードのレベル・スタンプ・とっくん・記録を消して、最初からにします。</p>
-        <div class="btns"><button class="btn warn" id="reset">リセットする</button></div>
+      <div class="panel">
+        <div class="set-row"><div class="l">音と声<small>効果音と読み上げ</small></div>${seg('muted', db.muted ? 'off' : 'on', [['on', 'オン'], ['off', 'オフ']])}</div>
+        <div class="set-row"><div class="l">見本の大きさ<small>練習中に見本をタップしても切り替わります</small></div>${seg('bigSample', db.bigSample ? 'big' : 'small', [['small', '小さめ'], ['big', '解答と同じ']])}</div>
+        <div class="set-row"><div class="l">見本と解答の並べ方<small>「自動」は画面の向きに合わせます</small></div>${seg('layout', db.layout, [['auto', '自動'], ['tb', '上下'], ['lr', '左右']])}</div>
       </div>
       <div class="panel"><h3>このアプリについて</h3>
-        <p>点つなぎ v1.0 ／ 全50レベル（3×3・5×5・7×7・立体図形）、ふつう・さかさ（上下逆転）・かがみ（鏡絵）。<br>
-        「さかさ」と「かがみ」は、ふつうのレベル5をクリアすると選べるようになります。記録はこの端末の中だけに保存されます。</p>
+        <p>点つなぎ v1.1 ／ 全50レベル（3×3・5×5・7×7・立体図形）、ふつう・さかさ（上下逆転）・かがみ（鏡絵）。記録と写真はこの端末の中だけに保存されます。</p>
       </div>`;
     document.querySelectorAll('#settingsBody .seg').forEach(g => g.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return;
       const k = g.dataset.k, v = b.dataset.v;
-      if (k === 'muted') { st.muted = v === 'off'; renderSound(); } else st.layout = v;
+      if (k === 'muted') { db.muted = v === 'off'; renderSound(); }
+      else if (k === 'bigSample') db.bigSample = v === 'big';
+      else db.layout = v;
       save(); renderSettings();
     }));
-    $('reset').addEventListener('click', () => dialog('進み具合をリセットしますか？', '<p>レベル・スタンプ・とっくん・記録がすべて消えます。元に戻せません。</p>', [
-      { label: 'やめる' },
-      { label: 'リセットする', cls: 'warn', fn: () => { const keep = { muted: st.muted, layout: st.layout }; st = Object.assign(fresh(), keep); recent = []; save(); renderSettings(); toast('リセットしました'); } },
-    ]));
+    $('addUser').addEventListener('click', () => {
+      if (db.users.length >= 12) { toast('12人まで ついか できます'); return; }
+      const u = freshUser('ユーザー' + (db.users.length + 1));
+      db.users.push(u); save(); renderSettings();
+      const inp = document.querySelector(`.ucard[data-id="${u.id}"] .uname`);
+      if (inp) { inp.scrollIntoView({ block: 'center' }); inp.focus(); inp.select(); }
+    });
   }
+  const userOf = el => { const c = el.closest('.ucard'); return c && db.users.find(u => u.id === c.dataset.id); };
+  $('settingsBody').addEventListener('click', e => {
+    const b = e.target.closest('[data-act]'); if (!b || b.tagName === 'INPUT' || b.tagName === 'SELECT') return;
+    const u = userOf(b); if (!u) return;
+    const act = b.dataset.act;
+    if (act === 'photo') { photoTarget = u.id; $('photoIn').value = ''; $('photoIn').click(); }
+    else if (act === 'unphoto') { u.photo = ''; save(); renderSettings(); }
+    else if (act === 'reset') dialog(`${esc(u.name)}さんの進み具合をリセットしますか？`, '<p>レベル・スタンプ・とっくん・記録が消えます。名前と写真は残ります。元に戻せません。</p>', [
+      { label: 'やめる' },
+      { label: 'リセットする', cls: 'warn', fn: () => { Object.assign(u, freshProgress()); recent = []; save(); renderSettings(); toast('リセットしました'); } },
+    ]);
+    else if (act === 'del') dialog(`${esc(u.name)}さんを削除しますか？`, '<p>このユーザーの進み具合・記録・写真がすべて消えます。元に戻せません。</p>', [
+      { label: 'やめる' },
+      { label: '削除する', cls: 'warn', fn: () => {
+        db.users = db.users.filter(x => x !== u);
+        if (db.cur === u.id) setUser(db.users[0].id);
+        save(); renderSettings(); toast('削除しました');
+      } },
+    ]);
+  });
+  $('settingsBody').addEventListener('change', e => {
+    const el = e.target, u = userOf(el); if (!u) return;
+    if (el.dataset.act === 'lv') {
+      const m = el.dataset.m, v = Math.min(MAX_LV, Math.max(1, Number(el.value) || 1));
+      u.modes[m] = { lv: v, c: 0 }; recent = []; save(); renderSettings();
+      toast(`${MODES[m].sub}を レベル${v}に しました`);
+    }
+  });
+  $('settingsBody').addEventListener('input', e => {
+    const el = e.target; if (el.dataset.act !== 'name') return;
+    const u = userOf(el); if (!u) return;
+    const v = el.value.trim().slice(0, 12);
+    if (v) { u.name = v; save(); }
+  });
+  $('settingsBody').addEventListener('focusout', e => {      // 名前を変えたら、写真のない人の丸の文字を合わせる
+    const el = e.target; if (!el.dataset || el.dataset.act !== 'name') return;
+    const u = userOf(el); if (!u) return;
+    el.value = u.name;
+    const pb = el.closest('.ucard').querySelector('.photo-btn'); if (pb) pb.innerHTML = avatar(u);
+  });
+  $('photoIn').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    const u = db.users.find(x => x.id === photoTarget);
+    if (!f || !u) return;
+    const url = URL.createObjectURL(f), img = new Image();
+    img.onload = () => {                         // 真ん中を正方形に切り抜いて小さくしてから保存
+      const S = 192, c = document.createElement('canvas'); c.width = c.height = S;
+      const k = Math.min(img.naturalWidth, img.naturalHeight);
+      c.getContext('2d').drawImage(img, (img.naturalWidth - k) / 2, (img.naturalHeight - k) / 2, k, k, 0, 0, S, S);
+      u.photo = c.toDataURL('image/jpeg', 0.85);
+      URL.revokeObjectURL(url); save(); renderSettings();
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); toast('写真を読み込めませんでした'); };
+    img.src = url;
+  });
 
   // ================= ダイアログ・データの書き出し =================
   function dialog(title, html, buttons) {
@@ -950,7 +1135,7 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     $('dlg').classList.add('show');
   }
   function exportData() {
-    const text = JSON.stringify(st);
+    const text = JSON.stringify(db);
     dialog('データを書き出す', '<p>下の文字をすべてコピーして、メモなどに保存してください。</p><textarea readonly id="expText"></textarea>', [
       { label: 'コピー', cls: 'pri', keep: true, fn: card => {
         const ta = card.querySelector('textarea'); ta.select();
@@ -963,13 +1148,14 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
     $('expText').value = text;
   }
   function importData() {
-    dialog('データを読み込む', '<p>書き出した文字を貼り付けてください。今の進み具合は上書きされます。</p><textarea id="impText"></textarea>', [
+    dialog('データを読み込む', '<p>書き出した文字を貼り付けてください。今の全員分の進み具合は上書きされます。</p><textarea id="impText"></textarea>', [
       { label: 'やめる' },
       { label: '読み込む', cls: 'pri', keep: true, fn: card => {
         try {
           const obj = JSON.parse(card.querySelector('textarea').value);
-          if (!obj || !obj.modes) throw new Error('bad');
-          st = sanitize(obj); save(); $('dlg').classList.remove('show'); renderRecords(); renderSound(); toast('読み込みました');
+          if (!obj || !(obj.users || obj.modes)) throw new Error('bad');
+          db = sanitizeDB(obj); st = db.users.find(u => u.id === db.cur); recent = []; recUser = db.cur;
+          save(); $('dlg').classList.remove('show'); renderRecords(); renderSound(); toast('読み込みました');
         } catch (e) { toast('読み込めませんでした'); }
       } },
     ]);
@@ -990,10 +1176,10 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
   }
 
   // テスト用（動作確認スクリプトから使う）
-  window.__tt = { cfg, makeProblem, transform, canon, get st() { return st; }, get prob() { return prob; } };
+  window.__tt = { cfg, makeProblem, transform, canon, get st() { return st; }, get db() { return db; }, get prob() { return prob; } };
 
   renderSound();
-  show('home');
+  show(db.users.length > 1 ? 'who' : 'home');
 }
 </script>
 </body>
